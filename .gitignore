@@ -1,0 +1,46 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+hs_err_pid*.log
+
+# env files
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+food_label_backend/venv/
+
+# flutter & IDE
+.dart_tool/
+.idea/
+# project-generated files
+logs/
+dataset/
+
+# trained model files
+*.h5
+
+# archives
+*.zip

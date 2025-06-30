@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>Smart Food Reader 🍎</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== Color Variables ===== */
+  :root {
+    --primary: #00b4d8;
+    --secondary: #48cae4;
+    --accent: #ff6f61;
+    --background: linear-gradient(135deg, #e0f7fa, #fff3e0, #f1f8e9);
+    --card-bg: rgba(255, 255, 255, 0.2);
+    --text-color: #1a1a1a;
+    --shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+  }
+  [data-theme="dark"] {
+    --primary: #00e5ff;
+    --secondary: #80ffdb;
+    --accent: #ff9f68;
+    --background: linear-gradient(135deg, #141E30, #243B55);
+    --card-bg: rgba(15, 20, 35, 0.6);
+    --text-color: #f5f5f5;
+    --shadow: 0 0 25px rgba(0, 255, 255, 0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--background);
+    background-size: 400% 400%;
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 10px;
+    transition: background 1s ease, color 0.5s ease;
+    animation: gradientShift 12s ease infinite;
+  }
+
+  /* ===== Container ===== */
+  .container {
+    max-width: 950px;
+    width: 100%;
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 45px 50px;
+    transition: all 0.6s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 70%);
+    animation: pulse 6s infinite alternate;
+    z-index: 0;
+  }
+
+  .container * { position: relative; z-index: 1; }
+
+  /* ===== Header ===== */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+  }
+  h1 {
+    font-size: 2.3rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 4s linear infinite;
+    background-size: 300%;
+  }
+  @keyframes shine {
+    0% {background-position: 0%;}
+    100% {background-position: 100%;}
+  }
+
+  #themeToggle {
+    border: none;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  }
+  #themeToggle:hover {
+    transform: rotate(15deg) scale(1.1);
+    box-shadow: 0 0 20px var(--primary);
+  }
+
+  /* ===== Sections ===== */
+  section {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s, background 0.3s;
+  }
+  section:hover {
+    transform: translateY(-6px);
+    background: rgba(255,255,255,0.25);
+  }
+
+  h3 {
+    color: var(--primary);
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  /* ===== Inputs ===== */
+  input[type="file"], input[type="text"], textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    background: rgba(255,255,255,0.8);
+    font-size: 15px;
+    margin-bottom: 15px;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+  }
+  input:focus, textarea:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 10px rgba(0,200,255,0.4);
+  }
+
+  /* ===== Buttons ===== */
+  button {
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background-size: 200%;
+  }
+  button:hover {
+    background-position: right center;
+    transform: translateY(-3px);
+    box-shadow: 0 0 15px rgba(0,255,255,0.4);
+  }
+  button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+  }
+
+  /* ===== Score Bar ===== */
+  .score-bar {
+    height: 22px;
+    background: #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 12px 0;
+  }
+  .score-fill {
+    height: 100%;
+    line-height: 22px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 13px;
+    text-align: center;
+    transition: width 0.6s ease, background 0.3s ease;
+  }
+
+  /* ===== Badges ===== */
+  .badge {
+    background: #ffe0e0;
+    color: #b71c1c;
+    padding: 6px 10px;
+    border-radius: 8px;
+    margin: 4px;
+    display: inline-block;
+    font-size: 13px;
+    transition: transform 0.2s ease, background 0.3s;
+  }
+  .badge:hover {
+    transform: scale(1.1);
+    background: #ff9f9f;
+  }
+
+  /* ===== Notifications ===== */
+  .error, .success, .loading {
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-top: 15px;
+    font-weight: 500;
+    border-left: 5px solid;
+    animation: fadeIn 0.4s ease;
+  }
+  .error { background: #ffeaea; color: #d32f2f; border-color: #d32f2f; }
+  .success { background: #e7f9ee; color: #2e7d32; border-color: #2e7d32; }
+  .loading { background: #e3f2fd; color: #1565c0; border-color: #1565c0; }
+
+  /* ===== Animations ===== */
+  @keyframes gradientShift {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+  }
+  @keyframes pulse {
+    from {opacity: 0.3;}
+    to {opacity: 0.6;}
+  }
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 25px; }
+    h1 { font-size: 1.7rem; }
+    button { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>🥗 Smart Food Reader</h2>
+
+  <!-- 🔹 OCR Upload Section -->
+  <h3>📷 Upload Food Label Image</h3>
+  <input type="file" id="labelFile" accept="image/*">
+  <button onclick="uploadLabel()" id="ocrBtn">Extract Ingredients</button>
+  <div id="ocrResult"></div>
+
+  <hr>
+
+  <!-- 🔹 Barcode Section -->
+  <h3>🏷️ Enter Barcode</h3>
+  <div>
+    <input type="text" id="barcode" placeholder="Enter barcode number">
+    <button onclick="fetchBarcode()" id="barcodeBtn">Fetch Product</button>
+    <input type="file" id="barcodeFile" accept="image/*" style="display:none">
+  </div>
+  <div id="barcodeResult"></div>
+
+  <hr>
+
+  <!-- 🔹 AI Food Detection Section -->
+  <h3>🍲 Detect Indian Food (AI)</h3>
+  <input type="file" id="foodImage" accept="image/*">
+  <button onclick="detectFoodAI()" id="foodAIBtn">Detect & Show Nutrition</button>
+  <div id="foodAIDiv"></div>
+  Disclaimer: The Nutritional Analysis is based on 1 piece per food item
+</div>
+
+
+<script>
+  // === DEBUG: Show all predictions to find correct order ===
+  async function debugPredict(){
+    const file = document.getElementById('foodImage').files[0];
+    const resultDiv = document.getElementById('foodAIDiv');
+    
+    if(!file){ 
+      alert("Please select an image first"); 
+      return; 
+    }
+    
+    const fd = new FormData(); 
+    fd.append('image', file);
+    
+    resultDiv.innerHTML = '<p class="loading">🔍 Running debug mode...</p>';
+    
+    try {
+      const res = await fetch('/debug_predict', { 
+        method: 'POST', 
+        body: fd
+      });
+      
+      const data = await res.json();
+      console.log('Debug results:', data);
+      
+      if(data.error){ 
+        resultDiv.innerHTML = `<div class="error">❌ Error: ${data.error}</div>`; 
+        return; 
+      }
+      
+      resultDiv.innerHTML = `
+        <div style="background: #fff3cd; padding: 15px; border-radius: 8px;">
+          <h4>🔍 Debug Results for: ${data.filename}</h4>
+          
+          <div style="background: #d1ecf1; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #0c5460;">
+            <h5 style="margin: 0; color: #0c5460;">🎯 RAW Model Output:</h5>
+            <p style="margin: 5px 0;"><b>Predicted Index:</b> ${data.predicted_index}</p>
+            <p style="margin: 5px 0;"><b>Mapped to Class:</b> ${data.predicted_class}</p>
+            <p style="margin: 5px 0;"><b>Confidence:</b> ${data.predicted_confidence}%</p>
+          </div>
+          
+          <p style="color: #856404;"><b>Top 3 Predictions:</b></p>
+          <ol>
+            ${data.top_3.map(p => `
+              <li><b>Index ${p.index}: ${p.class_name}</b> - ${p.confidence}%</li>
+            `).join('')}
+          </ol>
+          
+          <h5>All Predictions (original index order):</h5>
+          <pre style="max-height: 300px; overflow-y: auto;">${JSON.stringify(data.all_predictions_original_order, null, 2)}</pre>
+          
+          <p style="color: #856404; margin-top: 15px;">
+            <b>Key Info:</b><br>
+            • Model predicted INDEX <b>${data.predicted_index}</b> with highest confidence<br>
+            • This is currently mapped to "<b>${data.predicted_class}</b>"<br>
+            • If this is wrong, that index needs to be corrected in class_names list
+          </p>
+        </div>
+      `;
+      
+    } catch(error) {
+      resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+      console.error('Debug error:', error);
+    }
+  }
+
+  // === AI Food Detection with proper error handling ===
+  async function detectFoodAI(){
+    const file = document.getElementById('foodImage').files[0];
+    const btn = document.getElementById('foodAIBtn');
+    const resultDiv = document.getElementById('foodAIDiv');
+    
+    if(!file){ 
+      alert("Please select an image first"); 
+      return; 
+    }
+    
+    const fd = new FormData(); 
+    fd.append('image', file);
+    
+    // Disable button and show loading
+    btn.disabled = true;
+    resultDiv.innerHTML = '<p class="loading">⏳ Detecting food... Please wait</p>';
+    
+    console.log('Starting food detection for:', file.name);
+    
+    try {
+      // Add timeout to prevent indefinite waiting
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout for model inference
+      
+      console.log('Sending request to /predict_food...');
+      
+      const res = await fetch('/predict_food', { 
+        method: 'POST', 
+        body: fd,
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      console.log('Response status:', res.status, res.statusText);
+      
+      if(!res.ok){
+        const errorText = await res.text();
+        console.error('Server error response:', errorText);
+        throw new Error(`Server error: ${res.status} - ${errorText}`);
+      }
+      
+      const data = await res.json();
+      console.log('Response data:', data);
+      
+      if(data.error){ 
+        resultDiv.innerHTML = `<div class="error">❌ Error: ${data.error}</div>`; 
+        return; 
+      }
+      
+      // Check if we have candidates (no mapping found)
+      if(data.candidates){
+        resultDiv.innerHTML = `
+          <div class="error">
+            <p>Detected: ${data.detected}</p>
+            <pre>${JSON.stringify(data.candidates, null, 2)}</pre>
+            <p>Edit ingredients or choose best match manually.</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Success - display results
+      const color = data.score < 40 ? 'red' : data.score < 70 ? 'orange' : 'green';
+      const foodName = data.food_name || data.predicted_food || 'Unknown';
+      const confidence = data.confidence || 0;
+      
+      resultDiv.innerHTML = `
+        <div class="success">
+          <h4>✅ Detected: ${foodName}</h4>
+          <p><b>Confidence:</b> ${(confidence * 100).toFixed(2)}%</p>
+          ${data.processing_time_sec ? `<p><b>Processing Time:</b> ${data.processing_time_sec.toFixed(2)}s</p>` : ''}
+          
+          ${data.ingredients ? `
+            <h4>📝 Ingredients:</h4>
+            <p>${data.ingredients}</p>
+          ` : '<p><i>No ingredient data available</i></p>'}
+          
+          ${data.nutrition && Object.keys(data.nutrition).length > 0 ? `
+            <h4>🍽️ Nutrition Facts:</h4>
+            <p><b>Calories:</b> ${data.nutrition.calories} kcal</p>
+            <p><b>Protein:</b> ${data.nutrition.protein_g}g | <b>Fat:</b> ${data.nutrition.fat_g}g | <b>Carbs:</b> ${data.nutrition.carbs_g}g</p>
+          ` : ''}
+          
+          <h4>Health Score: ${data.score}/100 — ${data.rating}</h4>
+          <div class="score-bar">
+            <div class="score-fill" style="width:${data.score}%;background:${color}">${data.score}</div>
+          </div>
+          
+          ${data.harmful && data.harmful.length > 0 ? `
+            <h4>⚠️ Harmful Ingredients:</h4>
+            <div>${data.harmful.map(x=>`<span class='badge'>${x}</span>`).join('')}</div>
+          ` : ''}
+          
+          ${data.substitutes && data.substitutes.length > 0 ? `
+            <h4>💡 Healthier Substitutes:</h4>
+            <ul>${data.substitutes.map(s=>`<li>${s}</li>`).join('')}</ul>
+          ` : ''}
+        </div>
+      `;
+      
+    } catch(error) {
+      console.error('Detection error:', error);
+      if(error.name === 'AbortError'){
+        resultDiv.innerHTML = '<div class="error">❌ Request timeout - Server took too long to respond (>60s). Please check if the model is loaded correctly.</div>';
+      } else if(error.message.includes('Failed to fetch')){
+        resultDiv.innerHTML = '<div class="error">❌ Cannot connect to server. Please ensure Flask is running on http://127.0.0.1:5000</div>';
+      } else {
+        resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}<br><small>Check browser console (F12) for details</small></div>`;
+      }
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  // === OCR Upload and Extract ===
+  async function uploadLabel(){
+    const file = document.getElementById('labelFile').files[0];
+    const btn = document.getElementById('ocrBtn');
+    const resultDiv = document.getElementById('ocrResult');
+    
+    if(!file){ 
+      alert("Please select an image first!"); 
+      return; 
+    }
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    btn.disabled = true;
+    resultDiv.innerHTML = '<p class="loading">⏳ Extracting ingredients...</p>';
+    
+    try {
+      const res = await fetch('/extract', { method: 'POST', body: formData });
+      const data = await res.json();
+
+      if(data.error){ 
+        resultDiv.innerHTML = `<div class="error">${data.error}</div>`;
+        return;
+      }
+
+      // Display OCR result and analyze button
+      resultDiv.innerHTML = `
+        <h4>Detected Ingredients:</h4>
+        <textarea id="ingredientsBox" rows="5">${data.ingredients}</textarea>
+        <br><br>
+        <button onclick="evaluateIngredients()">Analyze Ingredients</button>
+        <div id="analysisResult"></div>
+      `;
+    } catch(error) {
+      resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  // === Evaluate Ingredients (used by OCR text box) ===
+  async function evaluateIngredients(){
+    const text = document.getElementById('ingredientsBox').value.trim();
+    if(!text){ alert("No ingredients found!"); return; }
+
+    try {
+      const res = await fetch('/evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ingredients: text })
+      });
+      const data = await res.json();
+
+      if(data.error){
+        document.getElementById('analysisResult').innerHTML = `<div class="error">${data.error}</div>`;
+        return;
+      }
+
+      displayResult('analysisResult', data);
+    } catch(error) {
+      document.getElementById('analysisResult').innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+    }
+  }
+
+  // === Fetch Barcode and Show Product Info ===
+  async function fetchBarcode(){
+    const code = document.getElementById('barcode').value.trim();
+    const btn = document.getElementById('barcodeBtn');
+    const resultDiv = document.getElementById('barcodeResult');
+    
+    if(!code){ 
+      alert("Enter a barcode first!"); 
+      return; 
+    }
+
+    btn.disabled = true;
+    resultDiv.innerHTML = '<p class="loading">⏳ Fetching product info...</p>';
+    
+    try {
+      const res = await fetch(`/barcode?barcode=${code}`);
+      const data = await res.json();
+
+      if(data.error){ 
+        resultDiv.innerHTML = `<div class="error">${data.error}</div>`;
+        return;
+      }
+
+      displayResult('barcodeResult', data);
+    } catch(error) {
+      resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  // === Reanalyze Edited Ingredients (for barcode or OCR text) ===
+  async function reanalyze(targetId){
+    const text = document.querySelector(`#${targetId} textarea`).value;
+    
+    try {
+      const res = await fetch('/evaluate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ ingredients: text })
+      });
+      const data = await res.json();
+      
+      if(data.error){ 
+        alert(data.error); 
+        return; 
+      }
+      
+      displayResult(targetId, data);
+    } catch(error) {
+      alert('Error: ' + error.message);
+    }
+  }
+
+  // === Display Analysis Results on Page ===
+  function displayResult(targetId, data){
+    const color = data.score < 40 ? 'crimson' : data.score < 70 ? 'orange' : 'green';
+    const div = document.getElementById(targetId);
+    div.innerHTML = `
+      <h4>Ingredients:</h4>
+      <textarea rows="5">${data.ingredients || "Not available"}</textarea>
+      <button onclick="reanalyze('${targetId}')">🔁 Reanalyze</button>
+
+      <h4>Health Score: ${data.score}/100</h4>
+      <div class="score-bar"><div class="score-fill" style="width:${data.score}%;background:${color};">${data.score}</div></div>
+      <h4>${data.rating}</h4>
+
+      <h4>⚠️ Harmful Ingredients</h4>
+      <div>${data.harmful && data.harmful.length > 0 ? data.harmful.map(x=>`<span class='badge'>${x}</span>`).join('') : "None detected"}</div>
+
+      <h4>💡 Healthier Substitutes</h4>
+      <ul>${data.substitutes && data.substitutes.length > 0 ? data.substitutes.map(s=>`<li>${s}</li>`).join('') : "<li>None available</li>"}</ul>
+
+      ${data.nutriments ? `<h4>🍽️ Nutrition Facts</h4><pre>${JSON.stringify(data.nutriments, null, 2)}</pre>` : ''}
+    `;
+  }
+</script>
+</body>
+</html>

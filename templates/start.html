@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Food Reader 🍎</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ================== BASE STYLING ================== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #9be7ff, #e3ffe7, #fff7e0);
+      background-size: 400% 400%;
+      animation: bgShift 15s ease infinite;
+      color: #222;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      transition: background 1s ease, color 0.6s ease;
+    }
+
+    @keyframes bgShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ================== GLASS CARD ================== */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(18px) saturate(150%);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 50px;
+      margin: 80px auto;
+      border-radius: 22px;
+      max-width: 750px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+      animation: fadeUp 1s ease;
+      color: #111;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: "";
+      position: absolute;
+      top: -100%;
+      left: -100%;
+      width: 300%;
+      height: 300%;
+      background: conic-gradient(from 90deg, rgba(26,115,232,0.2), rgba(0,200,255,0.15), rgba(0,255,180,0.2), transparent);
+      animation: rotateGradient 12s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes rotateGradient {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .glass-card * { position: relative; z-index: 2; }
+
+    h1 {
+      font-size: 2.5em;
+      font-weight: 700;
+      background: linear-gradient(90deg, #007bff, #00b894, #ff6f61);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 300%;
+      animation: shine 5s linear infinite;
+      margin-bottom: 12px;
+    }
+
+    @keyframes shine {
+      0% { background-position: 0% }
+      100% { background-position: 100% }
+    }
+
+    p {
+      color: #333;
+      font-size: 1.1em;
+      line-height: 1.7;
+      margin-top: 10px;
+      margin-bottom: 25px;
+    }
+
+    /* ================== CTA BUTTONS ================== */
+    .btn-group button {
+      background: linear-gradient(135deg, #007bff, #00b894, #ff6f61);
+      background-size: 250%;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 22px;
+      margin: 8px;
+      font-size: 1.05em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .btn-group button:hover {
+      background-position: right center;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,200,255,0.3);
+    }
+
+    footer {
+      margin-top: 30px;
+      color: #333;
+      font-size: 0.9em;
+      opacity: 0.8;
+      transition: opacity 0.4s ease;
+    }
+
+    footer:hover {
+      opacity: 1;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ================== MODAL ================== */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      animation: fadeIn 0.5s ease;
+    }
+
+    .modal-content {
+      background: rgba(255,255,255,0.95);
+      margin: 5% auto;
+      padding: 35px 45px;
+      border-radius: 20px;
+      width: 85%;
+      max-width: 800px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      color: #222;
+      position: relative;
+      animation: zoomIn 0.5s ease;
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-content h2 {
+      color: #007bff;
+      font-size: 1.8em;
+      margin-bottom: 15px;
+    }
+
+    .modal-content p, .modal-content ul {
+      color: #333;
+      line-height: 1.7;
+      font-size: 1.05em;
+    }
+
+    .modal-content ul li {
+      list-style: none;
+      margin-bottom: 8px;
+    }
+
+    .close {
+      color: #555;
+      float: right;
+      font-size: 26px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .close:hover {
+      color: #e74c3c;
+    }
+
+    /* ================== ANIMATIONS ================== */
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+
+    /* ================== DARK MODE ================== */
+    .dark-mode {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #f5f5f5;
+    }
+    .dark-mode .glass-card {
+      background: rgba(255,255,255,0.1);
+      color: #f5f5f5;
+    }
+    .dark-mode p, .dark-mode footer { color: #ddd; }
+    .dark-toggle {
+      position: fixed;
+      top: 20px;
+      right: 25px;
+      background: linear-gradient(135deg, #00b894, #007bff);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 48px; height: 48px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: transform 0.4s ease, box-shadow 0.3s ease;
+      z-index: 2000;
+    }
+    .dark-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(0,200,255,0.4);
+    }
+
+    @media(max-width: 600px){
+      .glass-card { padding: 30px; }
+      h1 { font-size: 2em; }
+      .btn-group button { width: 90%; }
+    }
+  </style>
+</head>
+
+<body class="start-body">
+  <div class="glass-card animate-fade">
+    <h1>🍎 Smart Food Reader</h1>
+    <p>
+      Scan food labels or barcodes instantly.<br>
+      Our AI identifies ingredients, detects harmful additives, and suggests healthier alternatives — empowering smarter food choices.
+    </p>
+    <div class="btn-group">
+      <button onclick="window.location.href='/analyze-page'">🚀 Start Scanning</button>
+      <button onclick="openModal('aboutModal')">👩‍💻 About Us</button>
+      <button onclick="openModal('missionModal')">🎯 Our Mission</button>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 Food.AI | Built by Harish Jalani, Shubham Jainapur, and Kartik Mahindrakar
+  </footer>
+
+  <!-- ====== About Us Modal ====== -->
+  <div id="aboutModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('aboutModal')">&times;</span>
+      <h2>👩‍💻 About Us</h2>
+      <p><b>Harish Jalani</b> — AI & Data Science Sophomore passionate about building human-centric and secure technology. Specializes in machine learning and IoT innovations.</p>
+      <p><b>Shubham Jainapur</b> — Full-stack enthusiast and problem solver focused on intuitive UI and backend architecture for scalable systems.</p>
+      <p><b>Kartik Mahindrakar</b> — Data-driven developer interested in deep learning and automation, aiming to simplify human decision-making with smart AI tools.</p>
+    </div>
+  </div>
+
+  <!-- ====== Our Mission Modal ====== -->
+  <div id="missionModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('missionModal')">&times;</span>
+      <h2>🎯 Our Mission</h2>
+      <p>
+        The <b>Smart Food Reader</b> was developed to promote awareness about what we consume every day.  
+        Our system leverages AI, image recognition, and data science to analyze food labels and barcodes — helping users make healthier, more informed dietary decisions.
+      </p>
+      <p><b>Objectives:</b></p>
+      <ul>
+        <li>⚙️ Identify food products using AI-based image recognition.</li>
+        <li>📊 Analyze ingredients for nutritional quality and harmful additives.</li>
+        <li>💡 Suggest healthier substitutes and alternatives.</li>
+        <li>🌱 Encourage mindful eating and promote health-conscious choices.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function openModal(id) {
+      document.getElementById(id).style.display = "block";
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+    window.onclick = function(event) {
+      const about = document.getElementById("aboutModal");
+      const mission = document.getElementById("missionModal");
+      if (event.target === about) about.style.display = "none";
+      if (event.target === mission) mission.style.display = "none";
+    };
+  </script>
+</body>
+</html>

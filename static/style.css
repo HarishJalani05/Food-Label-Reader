@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #222;
+}
+
+/* ---------- Backgrounds ---------- */
+.start-body,
+.analyzer-body {
+  background: linear-gradient(135deg, #e0f7fa, #f8f9fa);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ---------- Glass Card / Container ---------- */
+.glass-card,
+.main-container {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 90%;
+  max-width: 700px;
+  text-align: center;
+  color: #222;
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: scale(1.02);
+}
+
+/* ---------- Text Styling ---------- */
+h1, h2, h3 {
+  color: #0b3954;
+  margin-bottom: 12px;
+}
+
+p {
+  color: #333;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* ---------- Buttons ---------- */
+.cta-btn {
+  background: linear-gradient(135deg, #007bff, #00b4d8);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+.secondary-btn {
+  background: #f1f3f4;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-size: 14px;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.secondary-btn:hover {
+  background: #e0e0e0;
+}
+
+/* ---------- Inputs ---------- */
+.input-field, textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  margin-top: 8px;
+  outline: none;
+  background: #fff;
+  color: #222;
+}
+.input-field::placeholder, textarea::placeholder {
+  color: #777;
+}
+textarea {
+  height: 120px;
+  resize: none;
+}
+
+/* ---------- Barcode Box ---------- */
+#reader {
+  margin: 10px auto;
+  border: 2px dashed #007bff;
+  border-radius: 10px;
+  background: #f8fbff;
+  width: 300px;
+  height: 240px;
+}
+
+/* ---------- Result Section ---------- */
+.result-section {
+  margin-top: 25px;
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 20px;
+  color: #222;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  text-align: left;
+}
+
+.score-bar {
+  height: 18px;
+  background: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.score-fill {
+  height: 100%;
+  width: 0%;
+  background: #28a745;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  transition: width 0.6s ease;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #fce4e4;
+  color: #b71c1c;
+  margin: 3px;
+  font-size: 13px;
+  border: 1px solid #f5c2c2;
+}
+
+/* ---------- Animations ---------- */
+/* ---------- FIX: Prevent glass card from disappearing ---------- */
+.animate-fade {
+  animation: fadeInUp 1s ease-out forwards;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Optional: floating animation for subtle effect */
+.glass-card {
+  animation: fadeInUp 1s ease-out forwards, floatCard 6s ease-in-out infinite;
+}
+
+@keyframes floatCard {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+
+/* ---------- Footer ---------- */
+footer {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+}
+
+/* ---------- Extra Styling ---------- */
+video {
+  width: 100%;
+  border-radius: 10px;
+  display: none;
+  margin-top: 8px;
+}
+canvas {
+  display: none;
+}
+hr {
+  border: none;
+  height: 1px;
+  background: #e0e0e0;
+  margin: 25px 0;
+}

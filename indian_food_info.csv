@@ -1,0 +1,11 @@
+food_key,display_name,ingredients,calories,protein_g,fat_g,carbs_g
+vada_pav,Vada Pav,"potato, bread, oil, chutney, garlic",290,5,15,35
+pani_puri,Pani Puri,"semolina or wheat, potato, tamarind, mint, spices",150,3,5,22
+pav_bhaji,Pav Bhaji,"potato, pea, tomato, butter, bread",300,6,12,40
+idli_wada,Idli Wada,"rice, urad dal, oil, spices",230,8,6,35
+samosa,Samosa,"maida/atta, potato, peas, oil, spices",250,4,13,28
+dhokla,Dhokla,"gram flour, yogurt, sugar, salt",160,5,3,25
+aloo_paratha,Aloo Paratha,"wheat flour, potato, ghee, spices",300,6,10,45
+sada_sandwich,Sada Sandwich,"bread, butter, cucumber, tomato",180,5,4,30
+steam_momos,Steam Momos,"wheat flour, minced veg/meat, ginger, soy",120,6,2,20
+kachori,Kachori,"maida, lentil stuffing, oil, spices",310,5,18,32
